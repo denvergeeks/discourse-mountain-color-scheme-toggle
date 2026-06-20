@@ -1,19 +1,19 @@
 toggle_before_icon:
   default: "search"
   type: string
-  description: "Insert the animated toggle before this header icon key"
+  description: "Header icon key before which the animated scene toggle will be inserted"
 
 show_for_anons:
   default: true
   type: bool
-  description: "Show the toggle for anonymous visitors"
+  description: "Show the animated scene toggle for anonymous visitors"
 
 compact_mode:
   default: false
   type: bool
-  description: "Use a slightly smaller header control"
+  description: "Use a smaller toggle size"
 
-debug_mode:
+show_label:
   default: false
   type: bool
-  description: "Show render diagnostics in the header control"
+  description: "Show a text label beside the toggle"
