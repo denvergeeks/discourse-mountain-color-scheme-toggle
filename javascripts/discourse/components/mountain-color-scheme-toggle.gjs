@@ -4,7 +4,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { on } from "@ember/modifier";
 import I18n from "discourse-i18n";
-
+// hello test
 export default class MountainColorSchemeToggle extends Component {
   @service currentUser;
   @service themeSelector;
