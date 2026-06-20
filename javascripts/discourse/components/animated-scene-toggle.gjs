@@ -5,16 +5,34 @@ import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import DButton from "discourse/components/d-button";
 import I18n from "discourse-i18n";
+import { htmlSafe } from "@ember/template";
+
+const SCENE_OUTER_START = htmlSafe("<div class=\"animated-scene-toggle__container\">");
+const SCENE_DARK_LAYER = htmlSafe("PASTE_DARK_LAYER_STRING_HERE");
+const SCENE_LIGHT_LAYER = htmlSafe("PASTE_LIGHT_LAYER_STRING_HERE");
+const SCENE_OUTER_END = htmlSafe("</div>");
 
 export default class AnimatedSceneToggle extends Component {
   @service currentUser;
   @service themeSelector;
 
   @tracked isLightMode = false;
-  @tracked frameLoaded = false;
-  @tracked frameFailed = false;
-  iframeElement = null;
-  loadTimeout = null;
+
+  get sceneOuterStart() {
+    return SCENE_OUTER_START;
+  }
+
+  get sceneDarkLayer() {
+    return SCENE_DARK_LAYER;
+  }
+
+  get sceneLightLayer() {
+    return SCENE_LIGHT_LAYER;
+  }
+
+  get sceneOuterEnd() {
+    return SCENE_OUTER_END;
+  }
 
   constructor() {
     super(...arguments);
@@ -25,9 +43,6 @@ export default class AnimatedSceneToggle extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
     this._observer?.disconnect();
-    if (this.loadTimeout) {
-      clearTimeout(this.loadTimeout);
-    }
   }
 
   get shouldRender() {
@@ -42,14 +57,6 @@ export default class AnimatedSceneToggle extends Component {
       classes.push("is-compact");
     }
 
-    if (this.frameFailed) {
-      classes.push("has-frame-failure");
-    }
-
-    if (this.frameLoaded) {
-      classes.push("is-frame-ready");
-    }
-
     return classes.join(" ");
   }
 
@@ -59,33 +66,12 @@ export default class AnimatedSceneToggle extends Component {
       : I18n.t(themePrefix("animated_scene_toggle.switch_to_light"));
   }
 
-  get debugMode() {
-    return settings.debug_mode;
-  }
-
   get debugText() {
-    if (!this.debugMode) {
+    if (!settings.debug_mode) {
       return null;
     }
 
-    if (this.frameFailed) {
-      return I18n.t(themePrefix("animated_scene_toggle.asset_failed"));
-    }
-
-    if (this.frameLoaded) {
-      return I18n.t(themePrefix("animated_scene_toggle.asset_ready"));
-    }
-
-    return I18n.t(themePrefix("animated_scene_toggle.asset_loading"));
-  }
-
-  get sceneUrl() {
-    return (
-      settings.theme_uploads_local?.animated_scene_html ||
-      settings.theme_uploads?.animated_scene_html ||
-      settings.animated_scene_html ||
-      "/assets/animated-scene.html"
-    );
+    return I18n.t(themePrefix("animated_scene_toggle.render_ready"));
   }
 
   syncState() {
@@ -94,7 +80,7 @@ export default class AnimatedSceneToggle extends Component {
       !root.classList.contains("dark") &&
       root.dataset.themeColorScheme !== "dark";
 
-    schedule("afterRender", this, this.postModeToFrame);
+    schedule("afterRender", this, this.applySceneModeClass);
   }
 
   observeRootThemeChanges() {
@@ -125,62 +111,20 @@ export default class AnimatedSceneToggle extends Component {
     root.dataset.themeColorScheme = mode;
   }
 
-  postModeToFrame() {
-    const frameWindow = this.iframeElement?.contentWindow;
+  applySceneModeClass() {
+    const root = document.querySelector(".animated-scene-toggle-header-button .animated-scene-toggle__scene-root");
 
-    if (!frameWindow || this.frameFailed) {
+    if (!root) {
       return;
     }
 
-    frameWindow.postMessage(
-      {
-        type: "animated-scene-toggle:set-mode",
-        mode: this.isLightMode ? "light" : "dark",
-      },
-      "*"
-    );
-  }
-
-  markFrameFailed() {
-    this.frameFailed = true;
-    this.frameLoaded = false;
+    root.classList.toggle("light-mode", this.isLightMode);
+    root.classList.toggle("dark-mode", !this.isLightMode);
   }
 
   @action
-  registerFrame(element) {
-    this.iframeElement = element;
-    this.frameLoaded = false;
-    this.frameFailed = false;
-
-    if (this.loadTimeout) {
-      clearTimeout(this.loadTimeout);
-    }
-
-    this.loadTimeout = setTimeout(() => {
-      if (!this.frameLoaded) {
-        this.markFrameFailed();
-      }
-    }, 8000);
-
-    element.addEventListener("load", () => {
-      this.frameLoaded = true;
-      this.frameFailed = false;
-      if (this.loadTimeout) {
-        clearTimeout(this.loadTimeout);
-        this.loadTimeout = null;
-      }
-      this.postModeToFrame();
-    });
-
-    element.addEventListener("error", () => {
-      this.markFrameFailed();
-      if (this.loadTimeout) {
-        clearTimeout(this.loadTimeout);
-        this.loadTimeout = null;
-      }
-    });
-
-    this.postModeToFrame();
+  sceneInserted() {
+    this.applySceneModeClass();
   }
 
   @action
@@ -188,37 +132,29 @@ export default class AnimatedSceneToggle extends Component {
     const nextMode = this.isLightMode ? "dark" : "light";
     await this.applyScheme(nextMode);
     this.isLightMode = nextMode === "light";
-    this.postModeToFrame();
+    this.applySceneModeClass();
   }
 
   <template>
-    {{#if this.shouldRender}}
+    {#if this.shouldRender}
       <li class="animated-scene-toggle-item">
         <DButton
-          @action={{this.toggleTheme}}
-          class={{this.buttonClass}}
-          title={{this.title}}
-          aria-label={{this.title}}
+          @action={this.toggleTheme}
+          class={this.buttonClass}
+          title={this.title}
+          aria-label={this.title}
         >
           <span class="animated-scene-toggle__inner" aria-hidden="true">
-            <iframe
-              class="animated-scene-toggle__frame"
-              src={{this.sceneUrl}}
-              loading="eager"
-              tabindex="-1"
-              {{did-insert this.registerFrame}}
-            ></iframe>
-            {{#if this.frameFailed}}
-              <span class="animated-scene-toggle__fallback" aria-hidden="true">
-                <span class="animated-scene-toggle__fallback-dot"></span>
-              </span>
-            {{/if}}
+            <span
+              class="animated-scene-toggle__scene-root"
+              {did-insert this.sceneInserted}
+            >{this.sceneDarkLayer}{this.sceneLightLayer}</span>
           </span>
-          {{#if this.debugText}}
-            <span class="animated-scene-toggle__debug-text">{{this.debugText}}</span>
-          {{/if}}
+          {#if this.debugText}
+            <span class="animated-scene-toggle__debug-text">{this.debugText}</span>
+          {/if}
         </DButton>
       </li>
-    {{/if}}
+    {/if}
   </template>
 }
