@@ -6,7 +6,6 @@
   "theme_version": "0.1.0",
   "minimum_discourse_version": "3.4.0.beta1",
   "assets": {
-    "scene-light": "assets/scene-light.svg",
-    "scene-dark": "assets/scene-dark.svg"
+    "icons-sprite": "/assets/animated-scene-toggle-sprite.svg"
   }
 }
