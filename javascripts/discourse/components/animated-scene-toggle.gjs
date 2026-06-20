@@ -7,10 +7,17 @@ import DButton from "discourse/components/d-button";
 import I18n from "discourse-i18n";
 import { htmlSafe } from "@ember/template";
 
-const SCENE_OUTER_START = htmlSafe("<div class=\"animated-scene-toggle__container\">");
-const SCENE_DARK_LAYER = htmlSafe("PASTE_DARK_LAYER_STRING_HERE");
-const SCENE_LIGHT_LAYER = htmlSafe("PASTE_LIGHT_LAYER_STRING_HERE");
-const SCENE_OUTER_END = htmlSafe("</div>");
+const SCENE_CONTAINER_START = htmlSafe("<div class=\"animated-scene-toggle__container\">");
+const DARK_REGION_1 = htmlSafe("PASTE_FROM_PACKAGED_FILE");
+const DARK_REGION_2 = htmlSafe("PASTE_FROM_PACKAGED_FILE");
+const DARK_REGION_3 = htmlSafe("PASTE_FROM_PACKAGED_FILE");
+const DARK_REGION_4 = htmlSafe("PASTE_FROM_PACKAGED_FILE");
+const DARK_REGION_5 = htmlSafe("PASTE_FROM_PACKAGED_FILE");
+const LIGHT_REGION_1 = htmlSafe("PASTE_FROM_PACKAGED_FILE");
+const LIGHT_REGION_2 = htmlSafe("PASTE_FROM_PACKAGED_FILE");
+const LIGHT_REGION_3 = htmlSafe("PASTE_FROM_PACKAGED_FILE");
+const LIGHT_REGION_4 = htmlSafe("PASTE_FROM_PACKAGED_FILE");
+const LIGHT_REGION_5 = htmlSafe("PASTE_FROM_PACKAGED_FILE");
 
 export default class AnimatedSceneToggle extends Component {
   @service currentUser;
@@ -18,20 +25,18 @@ export default class AnimatedSceneToggle extends Component {
 
   @tracked isLightMode = false;
 
-  get sceneOuterStart() {
-    return SCENE_OUTER_START;
-  }
-
-  get sceneDarkLayer() {
-    return SCENE_DARK_LAYER;
-  }
-
-  get sceneLightLayer() {
-    return SCENE_LIGHT_LAYER;
-  }
-
-  get sceneOuterEnd() {
-    return SCENE_OUTER_END;
+  get sceneMarkup() {
+    return [
+      SCENE_CONTAINER_START,
+      DARK_REGION_1,
+      DARK_REGION_2,
+      DARK_REGION_3,
+      DARK_REGION_4,
+      LIGHT_REGION_1,
+      LIGHT_REGION_2,
+      LIGHT_REGION_3,
+      LIGHT_REGION_4,
+    ];
   }
 
   constructor() {
@@ -112,7 +117,9 @@ export default class AnimatedSceneToggle extends Component {
   }
 
   applySceneModeClass() {
-    const root = document.querySelector(".animated-scene-toggle-header-button .animated-scene-toggle__scene-root");
+    const root = document.querySelector(
+      ".animated-scene-toggle-header-button .animated-scene-toggle__scene-root"
+    );
 
     if (!root) {
       return;
@@ -136,25 +143,29 @@ export default class AnimatedSceneToggle extends Component {
   }
 
   <template>
-    {#if this.shouldRender}
+    {{#if this.shouldRender}}
       <li class="animated-scene-toggle-item">
         <DButton
-          @action={this.toggleTheme}
-          class={this.buttonClass}
-          title={this.title}
-          aria-label={this.title}
+          @action={{this.toggleTheme}}
+          class={{this.buttonClass}}
+          title={{this.title}}
+          aria-label={{this.title}}
         >
           <span class="animated-scene-toggle__inner" aria-hidden="true">
             <span
               class="animated-scene-toggle__scene-root"
-              {did-insert this.sceneInserted}
-            >{this.sceneDarkLayer}{this.sceneLightLayer}</span>
+              {{did-insert this.sceneInserted}}
+            >
+              {{#each this.sceneMarkup as |region|}}
+                {{region}}
+              {{/each}}
+            </span>
           </span>
-          {#if this.debugText}
-            <span class="animated-scene-toggle__debug-text">{this.debugText}</span>
-          {/if}
+          {{#if this.debugText}}
+            <span class="animated-scene-toggle__debug-text">{{this.debugText}}</span>
+          {{/if}}
         </DButton>
       </li>
-    {/if}
+    {{/if}}
   </template>
 }
