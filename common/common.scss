@@ -32,36 +32,160 @@
   width: 42px;
 }
 
-.animated-scene-toggle__frame {
-  width: 263px;
-  height: 525px;
-  border: 0;
-  background: transparent;
-  pointer-events: none;
-  transform: scale(0.0835);
-  transform-origin: center;
-}
-
-.animated-scene-toggle-header-button.is-compact .animated-scene-toggle__frame {
-  transform: scale(0.072);
-}
-
-.animated-scene-toggle__fallback {
-  position: absolute;
-  inset: 7px;
+.animated-scene-toggle__scene-root {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--danger) 18%, transparent);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--danger) 55%, transparent);
 }
 
-.animated-scene-toggle__fallback-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 999px;
-  background: var(--danger);
+.animated-scene-toggle__container {
+  position: relative;
+  width: 263px;
+  height: 525px;
+  overflow: hidden;
+  transform: scale(0.0835);
+  transform-origin: center;
+  pointer-events: none;
+}
+
+.animated-scene-toggle-header-button.is-compact .animated-scene-toggle__container {
+  transform: scale(0.072);
+}
+
+.animated-scene-toggle__container svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.animated-scene-toggle__layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 263px;
+  height: 525px;
+}
+
+.animated-scene-toggle__layer--light {
+  opacity: 0;
+  transition: 4s;
+}
+
+.animated-scene-toggle__layer--dark {
+  opacity: 1;
+  transition: 4s;
+}
+
+.animated-scene-toggle__scene-root .moon {
+  transform: translate(-50px, 230px);
+  transition: 4s;
+}
+
+.animated-scene-toggle__scene-root .rising-star {
+  transform: translate(225px, -160px);
+  transition: 4s;
+}
+
+.animated-scene-toggle__scene-root .sun {
+  transition: 5s;
+}
+
+.animated-scene-toggle__scene-root .cloud1,
+.animated-scene-toggle__scene-root .cloud2,
+.animated-scene-toggle__scene-root .cloud3,
+.animated-scene-toggle__scene-root .cloud4 {
+  transition: 4s;
+}
+
+.animated-scene-toggle__scene-root.light-mode .animated-scene-toggle__layer--light {
+  opacity: 1;
+}
+
+.animated-scene-toggle__scene-root.light-mode .moon,
+.animated-scene-toggle__scene-root.light-mode .rising-star {
+  transform: none;
+  transition-delay: 1s;
+}
+
+.animated-scene-toggle__scene-root.light-mode .sun {
+  transform: translate(64px, -290px);
+}
+
+.animated-scene-toggle__scene-root.light-mode .cloud1 {
+  transform: translateX(-140px);
+}
+
+.animated-scene-toggle__scene-root.light-mode .cloud2 {
+  transform: translateX(-100px);
+}
+
+.animated-scene-toggle__scene-root.light-mode .cloud3 {
+  transform: translateX(-200px);
+}
+
+.animated-scene-toggle__scene-root.light-mode .cloud4 {
+  transform: translateX(-180px);
+}
+
+:root {
+  --animated-scene-mountain-y: 0;
+}
+
+.animated-scene-toggle__scene-root .mountain3 {
+  transform: translateX(29px) scaleX(1.04) translateY(var(--animated-scene-mountain-y));
+}
+
+.animated-scene-toggle__scene-root [class*="mountain"] {
+  transform: translateY(var(--animated-scene-mountain-y));
+  animation: animated-scene-go-up 2s both;
+}
+
+.animated-scene-toggle__scene-root .mountain2 {
+  animation-delay: 0.2s;
+}
+
+.animated-scene-toggle__scene-root .mountain3 {
+  animation-delay: 0.4s;
+}
+
+.animated-scene-toggle__scene-root .mountain4 {
+  animation-delay: 0.6s;
+}
+
+.animated-scene-toggle__scene-root .mountain5 {
+  animation-delay: 0.8s;
+}
+
+.animated-scene-toggle__scene-root .mountain6 {
+  animation-delay: 1s;
+}
+
+.animated-scene-toggle__scene-root .mountain7 {
+  animation-delay: 1.2s;
+}
+
+.animated-scene-toggle__scene-root .right {
+  animation: animated-scene-go-left 2s 0.2s both;
+}
+
+.animated-scene-toggle__scene-root .tree {
+  animation: animated-scene-go-up 2s both;
+}
+
+.animated-scene-toggle__scene-root .sun {
+  animation: animated-scene-fade-in 2s 2s both;
+}
+
+.animated-scene-toggle__scene-root .sky {
+  animation: animated-scene-sky 2s 2s both;
+}
+
+.animated-scene-toggle__scene-root .m3 {
+  transform: translateX(26px) scaleX(1.1);
+}
+
+.animated-scene-toggle__scene-root .light {
+  opacity: 0;
 }
 
 .animated-scene-toggle__debug-text {
@@ -72,17 +196,40 @@
   color: var(--primary-medium);
 }
 
-.animated-scene-toggle-header-button.has-frame-failure .animated-scene-toggle__debug-text {
-  color: var(--danger);
-}
-
-.animated-scene-toggle-header-button:focus-visible .animated-scene-toggle__inner,
-.animated-scene-toggle-header-button:hover .animated-scene-toggle__inner {
+.animated-scene-toggle-header-button:focus-visible .animated-scene-toggle__container,
+.animated-scene-toggle-header-button:hover .animated-scene-toggle__container {
   filter: drop-shadow(0 0 0.4px var(--tertiary-low)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.25));
 }
 
+@keyframes animated-scene-go-up {
+  from {
+    transform: translateY(200px);
+  }
+}
+
+@keyframes animated-scene-sky {
+  from {
+    transform: scale(2);
+  }
+}
+
+@keyframes animated-scene-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes animated-scene-go-left {
+  from {
+    transform: translateX(200px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .animated-scene-toggle__frame {
+  .animated-scene-toggle__scene-root *,
+  .animated-scene-toggle__scene-root *::before,
+  .animated-scene-toggle__scene-root *::after {
+    animation: none !important;
     transition: none !important;
   }
 }
