@@ -1,11 +1,11 @@
 {
-  "name": "animated-scene-color-toggle",
+  "name": "mountain-color-scheme-toggle",
   "component": true,
   "about_url": "https://meta.discourse.org/t/dark-light-mode-toggle-now-available-in-core/350991",
   "license_url": "https://opensource.org/licenses/MIT",
+  "assets": {},
+  "color_schemes": {},
   "theme_version": "0.1.0",
-  "minimum_discourse_version": "3.4.0.beta1",
-  "assets": {
-    "icons-sprite": "assets/animated-scene-toggle-sprite.svg"
-  }
+  "minimum_discourse_version": null,
+  "maximum_discourse_version": null
 }
