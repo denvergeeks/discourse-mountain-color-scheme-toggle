@@ -11,6 +11,12 @@ export default class MountainColorSchemeToggle extends Component {
 
   @tracked isDark = false;
 
+  get wrapperClass() {
+    return this.isDark
+      ? "mountain-toggle-scene-wrapper is-light-mode"
+      : "mountain-toggle-scene-wrapper";
+  }
+
   constructor() {
     super(...arguments);
     this.syncState();
