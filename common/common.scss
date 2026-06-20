@@ -3,233 +3,131 @@
   align-items: center;
 }
 
-.animated-scene-toggle-header-button {
-  width: 48px;
-  min-width: 48px;
-  height: 44px;
-  padding: 0 !important;
-  border: 0;
-  background: transparent;
-  gap: 0.35rem;
-}
+.animated-scene-toggle-header-button.btn {
+  --toggle-width: 72px;
+  --toggle-height: 36px;
+  --toggle-radius: 999px;
+  --thumb-size: 30px;
+  --thumb-offset: 3px;
+  --duration: 420ms;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
 
-.animated-scene-toggle-header-button.is-compact {
-  width: 42px;
-  min-width: 42px;
+  margin: 0;
+  padding: 0;
+  min-width: auto;
+  min-height: auto;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  gap: 0.5rem;
+
+  &.is-compact {
+    --toggle-width: 62px;
+    --toggle-height: 32px;
+    --thumb-size: 26px;
+    --thumb-offset: 3px;
+  }
+
+  &:hover,
+  &:focus-visible,
+  &.btn:hover,
+  &.btn:focus-visible {
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .d-button-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
 }
 
 .animated-scene-toggle__inner {
-  position: relative;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 44px;
-  overflow: hidden;
-}
-
-.animated-scene-toggle-header-button.is-compact .animated-scene-toggle__inner {
-  width: 42px;
 }
 
 .animated-scene-toggle__scene-root {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.animated-scene-toggle__container {
   position: relative;
-  width: 263px;
-  height: 525px;
+  width: var(--toggle-width);
+  height: var(--toggle-height);
+  border-radius: var(--toggle-radius);
   overflow: hidden;
-  transform: scale(0.0835);
-  transform-origin: center;
-  pointer-events: none;
+  isolation: isolate;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 0 0 1px var(--primary-low);
 }
 
-.animated-scene-toggle-header-button.is-compact .animated-scene-toggle__container {
-  transform: scale(0.072);
+.animated-scene-toggle__scene-layer {
+  position: absolute;
+  inset: 0;
+  transition:
+    opacity var(--duration) var(--ease),
+    transform var(--duration) var(--ease);
 }
 
-.animated-scene-toggle__container svg {
+.animated-scene-toggle__scene-layer img {
   display: block;
   width: 100%;
   height: 100%;
 }
 
-.animated-scene-toggle__layer {
+.animated-scene-toggle__scene-layer--light {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.animated-scene-toggle__scene-layer--dark {
+  opacity: 0;
+  transform: scale(1.04);
+}
+
+.animated-scene-toggle__scene-root.dark-mode .animated-scene-toggle__scene-layer--light {
+  opacity: 0;
+  transform: scale(1.04);
+}
+
+.animated-scene-toggle__scene-root.dark-mode .animated-scene-toggle__scene-layer--dark {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.animated-scene-toggle__thumb {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 263px;
-  height: 525px;
+  top: var(--thumb-offset);
+  left: var(--thumb-offset);
+  width: var(--thumb-size);
+  height: var(--thumb-size);
+  border-radius: 50%;
+  z-index: 2;
+  background: linear-gradient(180deg, #fff8dc 0%, #f7d774 100%);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.18),
+    inset 0 1px 1px rgba(255, 255, 255, 0.7);
+  transform: translateX(0);
+  transition:
+    transform var(--duration) var(--ease),
+    background var(--duration) var(--ease),
+    box-shadow var(--duration) var(--ease);
 }
 
-.animated-scene-toggle__layer--light {
-  opacity: 0;
-  transition: 4s;
+.animated-scene-toggle__scene-root.dark-mode .animated-scene-toggle__thumb {
+  transform: translateX(calc(var(--toggle-width) - var(--thumb-size) - (var(--thumb-offset) * 2)));
+  background: linear-gradient(180deg, #e2e8f0 0%, #cbd5e1 100%);
 }
 
-.animated-scene-toggle__layer--dark {
-  opacity: 1;
-  transition: 4s;
-}
-
-.animated-scene-toggle__scene-root .moon {
-  transform: translate(-50px, 230px);
-  transition: 4s;
-}
-
-.animated-scene-toggle__scene-root .rising-star {
-  transform: translate(225px, -160px);
-  transition: 4s;
-}
-
-.animated-scene-toggle__scene-root .sun {
-  transition: 5s;
-}
-
-.animated-scene-toggle__scene-root .cloud1,
-.animated-scene-toggle__scene-root .cloud2,
-.animated-scene-toggle__scene-root .cloud3,
-.animated-scene-toggle__scene-root .cloud4 {
-  transition: 4s;
-}
-
-.animated-scene-toggle__scene-root.light-mode .animated-scene-toggle__layer--light {
-  opacity: 1;
-}
-
-.animated-scene-toggle__scene-root.light-mode .moon,
-.animated-scene-toggle__scene-root.light-mode .rising-star {
-  transform: none;
-  transition-delay: 1s;
-}
-
-.animated-scene-toggle__scene-root.light-mode .sun {
-  transform: translate(64px, -290px);
-}
-
-.animated-scene-toggle__scene-root.light-mode .cloud1 {
-  transform: translateX(-140px);
-}
-
-.animated-scene-toggle__scene-root.light-mode .cloud2 {
-  transform: translateX(-100px);
-}
-
-.animated-scene-toggle__scene-root.light-mode .cloud3 {
-  transform: translateX(-200px);
-}
-
-.animated-scene-toggle__scene-root.light-mode .cloud4 {
-  transform: translateX(-180px);
-}
-
-:root {
-  --animated-scene-mountain-y: 0;
-}
-
-.animated-scene-toggle__scene-root .mountain3 {
-  transform: translateX(29px) scaleX(1.04) translateY(var(--animated-scene-mountain-y));
-}
-
-.animated-scene-toggle__scene-root [class*="mountain"] {
-  transform: translateY(var(--animated-scene-mountain-y));
-  animation: animated-scene-go-up 2s both;
-}
-
-.animated-scene-toggle__scene-root .mountain2 {
-  animation-delay: 0.2s;
-}
-
-.animated-scene-toggle__scene-root .mountain3 {
-  animation-delay: 0.4s;
-}
-
-.animated-scene-toggle__scene-root .mountain4 {
-  animation-delay: 0.6s;
-}
-
-.animated-scene-toggle__scene-root .mountain5 {
-  animation-delay: 0.8s;
-}
-
-.animated-scene-toggle__scene-root .mountain6 {
-  animation-delay: 1s;
-}
-
-.animated-scene-toggle__scene-root .mountain7 {
-  animation-delay: 1.2s;
-}
-
-.animated-scene-toggle__scene-root .right {
-  animation: animated-scene-go-left 2s 0.2s both;
-}
-
-.animated-scene-toggle__scene-root .tree {
-  animation: animated-scene-go-up 2s both;
-}
-
-.animated-scene-toggle__scene-root .sun {
-  animation: animated-scene-fade-in 2s 2s both;
-}
-
-.animated-scene-toggle__scene-root .sky {
-  animation: animated-scene-sky 2s 2s both;
-}
-
-.animated-scene-toggle__scene-root .m3 {
-  transform: translateX(26px) scaleX(1.1);
-}
-
-.animated-scene-toggle__scene-root .light {
-  opacity: 0;
-}
-
-.animated-scene-toggle__debug-text {
-  max-width: 16ch;
-  font-size: var(--font-down-2);
-  line-height: 1.1;
-  text-align: left;
-  color: var(--primary-medium);
-}
-
-.animated-scene-toggle-header-button:focus-visible .animated-scene-toggle__container,
-.animated-scene-toggle-header-button:hover .animated-scene-toggle__container {
-  filter: drop-shadow(0 0 0.4px var(--tertiary-low)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.25));
-}
-
-@keyframes animated-scene-go-up {
-  from {
-    transform: translateY(200px);
-  }
-}
-
-@keyframes animated-scene-sky {
-  from {
-    transform: scale(2);
-  }
-}
-
-@keyframes animated-scene-fade-in {
-  from {
-    opacity: 0;
-  }
-}
-
-@keyframes animated-scene-go-left {
-  from {
-    transform: translateX(200px);
-  }
+.animated-scene-toggle__label {
+  color: var(--primary-high);
+  font-size: var(--font-down-1);
+  line-height: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animated-scene-toggle__scene-root *,
-  .animated-scene-toggle__scene-root *::before,
-  .animated-scene-toggle__scene-root *::after {
-    animation: none !important;
+  .animated-scene-toggle-header-button.btn *,
+  .animated-scene-toggle-header-button.btn *::before,
+  .animated-scene-toggle-header-button.btn *::after {
     transition: none !important;
   }
 }
