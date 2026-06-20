@@ -97,10 +97,7 @@ export default class MountainColorSchemeToggle extends Component {
           {{on "click" this.toggleColorScheme}}
         >
           <span
-            class={{concat
-              "mountain-toggle-scene-wrapper "
-              (if this.isDark "is-light-mode" "")
-            }}
+            class={{this.wrapperClass}}
             style={{this.scaleStyle}}
           >
             {{! Device frame }}
