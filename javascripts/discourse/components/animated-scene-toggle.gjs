@@ -15,9 +15,7 @@ export default class AnimatedSceneToggle extends Component {
     super(...arguments);
     this.syncState();
 
-    this.observer = new MutationObserver(() => {
-      this.syncState();
-    });
+    this.observer = new MutationObserver(() => this.syncState());
 
     this.observer.observe(document.documentElement, {
       attributes: true,
@@ -35,7 +33,7 @@ export default class AnimatedSceneToggle extends Component {
   }
 
   get buttonClass() {
-    let classes = ["btn", "no-text", "animated-scene-toggle-header-button"];
+    const classes = ["btn", "no-text", "animated-scene-toggle-header-button"];
     classes.push(this.isDark ? "dark-mode" : "light-mode");
 
     if (settings.compact_mode) {
@@ -55,16 +53,9 @@ export default class AnimatedSceneToggle extends Component {
     return settings.show_label;
   }
 
-  get lightSceneUrl() {
-    return settings.theme_uploads["scene-light"];
-  }
-
-  get darkSceneUrl() {
-    return settings.theme_uploads["scene-dark"];
-  }
-
   syncState() {
     const root = document.documentElement;
+
     this.isDark =
       root.classList.contains("dark") ||
       root.dataset.themeColorScheme === "dark";
@@ -83,10 +74,7 @@ export default class AnimatedSceneToggle extends Component {
 
     const root = document.documentElement;
     root.classList.toggle("dark", mode === "dark");
-
-    if (mode) {
-      root.dataset.themeColorScheme = mode;
-    }
+    root.dataset.themeColorScheme = mode;
   }
 
   @action
@@ -109,27 +97,25 @@ export default class AnimatedSceneToggle extends Component {
               <span
                 class="animated-scene-toggle__scene-root {{if this.isDark 'dark-mode' 'light-mode'}}"
               >
-                <span class="animated-scene-toggle__scene-layer animated-scene-toggle__scene-layer--light">
-                  <img
-                    src={{this.lightSceneUrl}}
-                    alt=""
-                    width="72"
-                    height="36"
-                    loading="lazy"
-                    decoding="async"
-                  >
-                </span>
+                <svg
+                  class="animated-scene-toggle__svg"
+                  viewBox="0 0 72 36"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <use href="#animated-scene-toggle-light"></use>
+                </svg>
 
-                <span class="animated-scene-toggle__scene-layer animated-scene-toggle__scene-layer--dark">
-                  <img
-                    src={{this.darkSceneUrl}}
-                    alt=""
-                    width="72"
-                    height="36"
-                    loading="lazy"
-                    decoding="async"
-                  >
-                </span>
+                <svg
+                  class="animated-scene-toggle__svg animated-scene-toggle__svg--dark"
+                  viewBox="0 0 72 36"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <use href="#animated-scene-toggle-dark"></use>
+                </svg>
 
                 <span class="animated-scene-toggle__thumb"></span>
               </span>
