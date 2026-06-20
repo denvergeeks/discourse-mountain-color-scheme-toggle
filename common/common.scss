@@ -1,126 +1,250 @@
-.animated-scene-toggle-item {
+// Scoped wrapper so we don't fight the whole page
+.mountain-toggle-header-item {
   display: flex;
   align-items: center;
 }
 
-.animated-scene-toggle-header-button.btn {
-  --toggle-width: 72px;
-  --toggle-height: 36px;
-  --toggle-radius: 999px;
-  --thumb-size: 30px;
-  --thumb-offset: 3px;
-  --duration: 420ms;
-  --ease: cubic-bezier(0.22, 1, 0.36, 1);
-
-  margin: 0;
+.mountain-toggle-button {
+  border: 0;
   padding: 0;
-  min-width: auto;
-  min-height: auto;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-  gap: 0.5rem;
-
-  &.is-compact {
-    --toggle-width: 62px;
-    --toggle-height: 32px;
-    --thumb-size: 26px;
-    --thumb-offset: 3px;
-  }
-
-  &:hover,
-  &:focus-visible,
-  &.btn:hover,
-  &.btn:focus-visible {
-    background: transparent;
-    box-shadow: none;
-  }
-
-  .d-button-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-}
-
-.animated-scene-toggle__inner {
+  margin: 0;
+  background: none;
+  cursor: pointer;
   display: inline-flex;
-  align-items: center;
+  align-items: flex-start;
+  justify-content: center;
+  min-height: 40px;
 }
 
-.animated-scene-toggle__scene-root {
+.mountain-toggle-scene-wrapper {
   position: relative;
-  width: var(--toggle-width);
-  height: var(--toggle-height);
-  border-radius: var(--toggle-radius);
-  overflow: hidden;
-  isolation: isolate;
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
-    0 0 0 1px var(--primary-low);
+  display: block;
+  width: 263px;
+  height: 525px;
+  transform-origin: top right;
+  pointer-events: none; // prevent header layout shake
 }
 
-.animated-scene-toggle__svg {
+.mountain-toggle-button:focus-visible {
+  outline: 2px solid var(--tertiary);
+  outline-offset: 2px;
+  border-radius: 999px;
+}
+
+// We don't want the full-page gradient; strip global selectors.
+.mountain-toggle-scene-wrapper .container {
+  position: relative;
+  width: 263px;
+  max-height: 525px;
+  height: 525px;
+  overflow: hidden;
+  border-radius: 20px;
+  box-shadow: 0 18px 30px rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+
+.mountain-toggle-scene-wrapper .device {
   position: absolute;
-  inset: 0;
+  right: 0;
+  top: 0;
+}
+
+// Direct from original CSS, but scoped to the wrapper
+
+.mountain-toggle-scene-wrapper .layer1,
+.mountain-toggle-scene-wrapper .layer2 {
+  position: absolute;
+  right: 0;
+  top: 0;
   width: 100%;
   height: 100%;
-  display: block;
-  transition:
-    opacity var(--duration) var(--ease),
-    transform var(--duration) var(--ease);
-  opacity: 1;
-  transform: scale(1);
+  transform: scale(1.01);
 }
 
-.animated-scene-toggle__svg--dark {
+.mountain-toggle-scene-wrapper .layer2 {
   opacity: 0;
-  transform: scale(1.04);
+  transition: 4s;
 }
 
-.animated-scene-toggle__scene-root.dark-mode .animated-scene-toggle__svg {
-  opacity: 0;
-  transform: scale(1.04);
-}
-
-.animated-scene-toggle__scene-root.dark-mode .animated-scene-toggle__svg--dark {
+.mountain-toggle-scene-wrapper .layer1 {
   opacity: 1;
-  transform: scale(1);
+  transition: 4s;
 }
 
-.animated-scene-toggle__thumb {
-  position: absolute;
-  top: var(--thumb-offset);
-  left: var(--thumb-offset);
-  width: var(--thumb-size);
-  height: var(--thumb-size);
-  border-radius: 50%;
-  z-index: 2;
-  background: linear-gradient(180deg, #fff8dc 0%, #f7d774 100%);
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.18),
-    inset 0 1px 1px rgba(255, 255, 255, 0.7);
-  transform: translateX(0);
-  transition:
-    transform var(--duration) var(--ease),
-    background var(--duration) var(--ease);
+.mountain-toggle-scene-wrapper .moon {
+  transform: translate(-50px, 230px);
+  transition: 4s;
 }
 
-.animated-scene-toggle__scene-root.dark-mode .animated-scene-toggle__thumb {
-  transform: translateX(calc(var(--toggle-width) - var(--thumb-size) - (var(--thumb-offset) * 2)));
-  background: linear-gradient(180deg, #e2e8f0 0%, #cbd5e1 100%);
+.mountain-toggle-scene-wrapper .rising-star {
+  transform: translate(225px, -160px);
+  transition: 4s;
 }
 
-.animated-scene-toggle__label {
-  color: var(--primary-high);
-  font-size: var(--font-down-1);
-  line-height: 1;
+.mountain-toggle-scene-wrapper .sun {
+  transition: 5s;
 }
 
+.mountain-toggle-scene-wrapper .cloud1,
+.mountain-toggle-scene-wrapper .cloud2,
+.mountain-toggle-scene-wrapper .cloud3,
+.mountain-toggle-scene-wrapper .cloud4 {
+  transition: 4s;
+}
+
+// Note: we drive "light-mode" by adding .is-light-mode to the wrapper
+.mountain-toggle-scene-wrapper.is-light-mode .layer2 {
+  opacity: 1;
+}
+
+.mountain-toggle-scene-wrapper.is-light-mode .moon,
+.mountain-toggle-scene-wrapper.is-light-mode .rising-star {
+  transform: none;
+  transition-delay: 1s;
+}
+
+.mountain-toggle-scene-wrapper.is-light-mode .sun {
+  transform: translate(64px, -290px);
+}
+
+.mountain-toggle-scene-wrapper.is-light-mode .cloud1 {
+  transform: translateX(-140px);
+}
+
+.mountain-toggle-scene-wrapper.is-light-mode .cloud2 {
+  transform: translateX(-100px);
+}
+
+.mountain-toggle-scene-wrapper.is-light-mode .cloud3 {
+  transform: translateX(-200px);
+}
+
+.mountain-toggle-scene-wrapper.is-light-mode .cloud4 {
+  transform: translateX(-180px);
+}
+
+// Mountains + sky intro animations, scoped
+.mountain-toggle-scene-wrapper :root {
+  --mountainY: 0;
+}
+
+// In original, .mountain3 had extra transform; preserve but scope it
+.mountain-toggle-scene-wrapper .mountain3 {
+  transform: translateX(29px) scaleX(1.04) translateY(var(--mountainY));
+}
+
+.mountain-toggle-scene-wrapper [class*="mountain"] {
+  transform: translateY(var(--mountainY));
+  -webkit-animation: goUp 2s both;
+          animation: goUp 2s both;
+}
+
+.mountain-toggle-scene-wrapper .mountain2 {
+  -webkit-animation-delay: 0.2s;
+          animation-delay: 0.2s;
+}
+
+.mountain-toggle-scene-wrapper .mountain3 {
+  -webkit-animation-delay: 0.4s;
+          animation-delay: 0.4s;
+}
+
+.mountain-toggle-scene-wrapper .mountain4 {
+  -webkit-animation-delay: 0.6s;
+          animation-delay: 0.6s;
+}
+
+.mountain-toggle-scene-wrapper .mountain5 {
+  -webkit-animation-delay: 0.8s;
+          animation-delay: 0.8s;
+}
+
+.mountain-toggle-scene-wrapper .mountain6 {
+  -webkit-animation-delay: 1s;
+          animation-delay: 1s;
+}
+
+.mountain-toggle-scene-wrapper .mountain7 {
+  -webkit-animation-delay: 1.2s;
+          animation-delay: 1.2s;
+}
+
+.mountain-toggle-scene-wrapper .right {
+  -webkit-animation: goLeft 2s 0.2s both;
+          animation: goLeft 2s 0.2s both;
+}
+
+.mountain-toggle-scene-wrapper .tree {
+  -webkit-animation: goUp 2s both;
+          animation: goUp 2s both;
+}
+
+.mountain-toggle-scene-wrapper .sun {
+  -webkit-animation: fadeIn 2s 2s both;
+          animation: fadeIn 2s 2s both;
+}
+
+.mountain-toggle-scene-wrapper .sky {
+  -webkit-animation: sky 2s 2s both;
+          animation: sky 2s 2s both;
+}
+
+.mountain-toggle-scene-wrapper .m3 {
+  transform: translateX(26px) scaleX(1.1);
+}
+
+// Keyframes from original, kept global but only used by scoped classes
+@-webkit-keyframes goUp {
+  from {
+    transform: translateY(200px);
+  }
+}
+@keyframes goUp {
+  from {
+    transform: translateY(200px);
+  }
+}
+
+@-webkit-keyframes sky {
+  from {
+    transform: scale(2);
+  }
+}
+@keyframes sky {
+  from {
+    transform: scale(2);
+  }
+}
+
+@-webkit-keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@-webkit-keyframes goLeft {
+  from {
+    transform: translateX(200px);
+  }
+}
+@keyframes goLeft {
+  from {
+    transform: translateX(200px);
+  }
+}
+
+// Respect reduced motion
 @media (prefers-reduced-motion: reduce) {
-  .animated-scene-toggle-header-button.btn *,
-  .animated-scene-toggle-header-button.btn *::before,
-  .animated-scene-toggle-header-button.btn *::after {
-    transition: none !important;
+  .mountain-toggle-scene-wrapper *,
+  .mountain-toggle-scene-wrapper *::before,
+  .mountain-toggle-scene-wrapper *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
