@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
+import { on } from "@ember/modifier";
 import { apiInitializer } from "discourse/lib/api";
 import I18n from "discourse-i18n";
 
