@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { on } from "@ember/modifier";
 import I18n from "discourse-i18n";
 
 export default class MountainColorSchemeToggle extends Component {
